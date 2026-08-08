@@ -1,6 +1,7 @@
 package com.shopsphere.controller;
 
 import com.shopsphere.dto.ProductRequest;
+import com.shopsphere.dto.ProductResponse;
 import com.shopsphere.entity.Product;
 import com.shopsphere.service.ProductService;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,17 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product addProduct(@RequestBody ProductRequest request) {
+    public ProductResponse addProduct(@RequestBody ProductRequest request) {
         return productService.addProduct(request);
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/{id}")
+    public ProductResponse getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
     }
 }
