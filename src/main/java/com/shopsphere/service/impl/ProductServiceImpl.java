@@ -6,6 +6,8 @@ import com.shopsphere.repository.ProductRepository;
 import com.shopsphere.service.ProductService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -26,5 +28,10 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 }

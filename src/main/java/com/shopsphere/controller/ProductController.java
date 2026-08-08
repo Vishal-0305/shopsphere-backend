@@ -5,6 +5,8 @@ import com.shopsphere.entity.Product;
 import com.shopsphere.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
@@ -18,5 +20,10 @@ public class ProductController {
     @PostMapping
     public Product addProduct(@RequestBody ProductRequest request) {
         return productService.addProduct(request);
+    }
+
+    @GetMapping
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
     }
 }
