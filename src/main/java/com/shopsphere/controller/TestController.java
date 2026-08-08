@@ -8,6 +8,6 @@ public class TestController {
 
     @GetMapping("/api/v1/test")
     public String test() {
-        return "JWT Working";
+        return "JWT Authentication Successful";
     }
 }
