@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -121,5 +122,82 @@ public class ProductServiceImpl implements ProductService {
                         new ResourceNotFoundException("Product not found with id : " + id));
 
         productRepository.delete(product);
+    }
+
+    @Override
+    public List<ProductResponse> searchProducts(String keyword) {
+
+        List<Product> products =
+                productRepository.findByNameContainingIgnoreCase(keyword);
+
+        return products.stream()
+                .map(product -> ProductResponse.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .price(product.getPrice())
+                        .quantity(product.getQuantity())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<ProductResponse> getProductsByPriceRange(
+            BigDecimal minPrice,
+            BigDecimal maxPrice) {
+
+        List<Product> products =
+                productRepository.findByPriceBetween(minPrice, maxPrice);
+
+        return products.stream()
+                .map(product -> ProductResponse.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .price(product.getPrice())
+                        .quantity(product.getQuantity())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<ProductResponse> getProductsByCategoryAndPriceRange(
+            String categoryName,
+            BigDecimal minPrice,
+            BigDecimal maxPrice) {
+
+        List<Product> products =
+                productRepository.findByCategoryNameAndPriceBetween(
+                        categoryName,
+                        minPrice,
+                        maxPrice
+                );
+
+        return products.stream()
+                .map(product -> ProductResponse.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .price(product.getPrice())
+                        .quantity(product.getQuantity())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<ProductResponse> getProductsCostlierThan(BigDecimal price) {
+
+        List<Product> products =
+                productRepository.findProductsCostlierThan(price);
+
+        return products.stream()
+                .map(product -> ProductResponse.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .price(product.getPrice())
+                        .quantity(product.getQuantity())
+                        .build())
+                .toList();
     }
 }

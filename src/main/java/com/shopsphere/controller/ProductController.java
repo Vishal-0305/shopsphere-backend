@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -36,9 +37,24 @@ public class ProductController {
         return productService.getAllProducts(page, size, sortBy, direction);
     }
 
+    @GetMapping("/search")
+    public List<ProductResponse> searchProducts(
+            @RequestParam String keyword) {
+
+        return productService.searchProducts(keyword);
+    }
+
     @GetMapping("/{id}")
     public ProductResponse getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
+    }
+
+    @GetMapping("/price-range")
+    public List<ProductResponse> getProductsByPriceRange(
+            @RequestParam BigDecimal minPrice,
+            @RequestParam BigDecimal maxPrice) {
+
+        return productService.getProductsByPriceRange(minPrice, maxPrice);
     }
 
     @PutMapping("/{id}")
@@ -55,5 +71,24 @@ public class ProductController {
         productService.deleteProduct(id);
 
         return ResponseEntity.ok("Product deleted successfully");
+    }
+    @GetMapping("/filter")
+    public List<ProductResponse> getProductsByCategoryAndPriceRange(
+            @RequestParam String category,
+            @RequestParam BigDecimal minPrice,
+            @RequestParam BigDecimal maxPrice) {
+
+        return productService.getProductsByCategoryAndPriceRange(
+                category,
+                minPrice,
+                maxPrice
+        );
+    }
+
+    @GetMapping("/costlier-than")
+    public List<ProductResponse> getProductsCostlierThan(
+            @RequestParam BigDecimal price) {
+
+        return productService.getProductsCostlierThan(price);
     }
 }
