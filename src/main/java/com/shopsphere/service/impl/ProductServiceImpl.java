@@ -68,4 +68,37 @@ public class ProductServiceImpl implements ProductService {
                 .quantity(product.getQuantity())
                 .build();
     }
+
+    @Override
+    public ProductResponse updateProduct(Long id, ProductRequest request) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Product not found with id : " + id));
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+
+        Product updatedProduct = productRepository.save(product);
+
+        return ProductResponse.builder()
+                .id(updatedProduct.getId())
+                .name(updatedProduct.getName())
+                .description(updatedProduct.getDescription())
+                .price(updatedProduct.getPrice())
+                .quantity(updatedProduct.getQuantity())
+                .build();
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Product not found with id : " + id));
+
+        productRepository.delete(product);
+    }
 }
