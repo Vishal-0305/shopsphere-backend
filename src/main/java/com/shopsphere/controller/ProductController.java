@@ -5,6 +5,7 @@ import com.shopsphere.dto.ProductResponse;
 import com.shopsphere.entity.Product;
 import com.shopsphere.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,14 @@ public class ProductController {
         return productService.addProduct(request);
     }
 
-    @GetMapping
-    public List<ProductResponse> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/sort-direction")
+    public Page<ProductResponse> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        return productService.getAllProducts(page, size, sortBy, direction);
     }
 
     @GetMapping("/{id}")

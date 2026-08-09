@@ -8,6 +8,9 @@ import com.shopsphere.exception.ResourceNotFoundException;
 import com.shopsphere.repository.CategoryRepository;
 import com.shopsphere.repository.ProductRepository;
 import com.shopsphere.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,17 +54,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(product -> ProductResponse.builder()
+    public Page<ProductResponse> getAllProducts(int page, int size, String sortBy,String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Page<Product> productPage =
+                productRepository.findAll(PageRequest.of(page, size, sort));
+
+        return productPage.map(product ->
+                ProductResponse.builder()
                         .id(product.getId())
                         .name(product.getName())
                         .description(product.getDescription())
                         .price(product.getPrice())
                         .quantity(product.getQuantity())
-                        .build())
-                .toList();
+                        .build()
+        );
     }
 
     @Override
