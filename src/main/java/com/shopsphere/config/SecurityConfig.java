@@ -23,7 +23,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/users/register","/api/v1/auth/login","/api/v1/products/**","/api/v1/categories/**","/uploads/**").permitAll()
+                        .requestMatchers("/api/v1/users/register","/api/v1/auth/login","/api/v1/products/**","/api/v1/categories/**","/uploads/**","/api/v1/orders/**","/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter,
