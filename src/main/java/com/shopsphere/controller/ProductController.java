@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -90,5 +92,14 @@ public class ProductController {
             @RequestParam BigDecimal price) {
 
         return productService.getProductsCostlierThan(price);
+    }
+
+    @PostMapping("/{productId}/image")
+    public ProductResponse uploadProductImage(
+            @PathVariable Long productId,
+            @RequestParam("file") MultipartFile file)
+            throws IOException {
+
+        return productService.uploadProductImage(productId, file);
     }
 }

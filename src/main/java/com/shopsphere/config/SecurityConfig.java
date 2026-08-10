@@ -23,7 +23,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/users/register","/api/v1/auth/login","/api/v1/products/**","/api/v1/categories/**").permitAll()
+                        .requestMatchers("/api/v1/users/register","/api/v1/auth/login","/api/v1/products/**","/api/v1/categories/**","/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter,

@@ -8,11 +8,14 @@ import com.shopsphere.exception.ResourceNotFoundException;
 import com.shopsphere.repository.CategoryRepository;
 import com.shopsphere.repository.ProductRepository;
 import com.shopsphere.service.ProductService;
+import com.shopsphere.service.file.FileStorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,11 +24,14 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final FileStorageService fileStorageService;
 
     public ProductServiceImpl(ProductRepository productRepository,
-                              CategoryRepository categoryRepository) {
+                              CategoryRepository categoryRepository,
+                              FileStorageService fileStorageService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -199,5 +205,30 @@ public class ProductServiceImpl implements ProductService {
                         .quantity(product.getQuantity())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public ProductResponse uploadProductImage(Long productId,
+                                              MultipartFile file)
+            throws IOException {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Product not found with id : " + productId));
+
+        String fileName = fileStorageService.saveFile(file);
+
+        product.setImageUrl(fileName);
+
+        Product savedProduct = productRepository.save(product);
+
+        return ProductResponse.builder()
+                .id(savedProduct.getId())
+                .name(savedProduct.getName())
+                .description(savedProduct.getDescription())
+                .price(savedProduct.getPrice())
+                .quantity(savedProduct.getQuantity())
+                .build();
     }
 }
